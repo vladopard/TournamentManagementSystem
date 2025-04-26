@@ -3,11 +3,9 @@
     //juction player -> <- match
     public class PlayerMatchStats
     {
-        public int PlayerMatchStatsId { get; set; }
-        public int GoalsScored { get; set; }
-        public int Assists { get; set; }
-        public int YellowCards { get; set; }
-        public int RedCards { get; set; }
+        public int PointsScored { get; set; }
+        public int MatchRating { get; set; }
+        public int FoulsCommited { get; set; }
         //Relations
         public int MatchId { get; set; }
         public Match Match { get; set; } = null!;

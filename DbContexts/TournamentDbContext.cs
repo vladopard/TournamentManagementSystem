@@ -8,6 +8,14 @@ namespace TournamentManagementSystem.DbContexts
         public TournamentDbContext(DbContextOptions<TournamentDbContext> options) 
             : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            
+
+
+        }
+
+
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Player> Players { get; set; }
