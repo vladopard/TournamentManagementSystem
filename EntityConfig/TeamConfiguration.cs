@@ -13,15 +13,17 @@ namespace TournamentManagementSystem.EntityConfig
             builder.Property(t => t.Name).IsRequired().HasMaxLength(100);
             builder.Property(t => t.Coach).IsRequired().HasMaxLength(100);
 
-            //builder.HasOne(t => t.Tournament)
-            //    .WithMany(tr => tr.Teams)
-            //    .HasForeignKey(t => t.TournamentId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(t => t.Tournament)
+                .WithMany(tr => tr.Teams)
+                .HasForeignKey(t => t.TournamentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(t => t.Players)
                    .WithOne(p => p.Team)
                    .HasForeignKey(p => p.TeamId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Ignore(t => t.Matches);
         }
     }
 }

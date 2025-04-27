@@ -16,20 +16,20 @@ namespace TournamentManagementSystem.EntityConfig
             builder.Property(m => m.ScoreAway).IsRequired();
 
             builder.HasOne(m => m.HomeTeam)
-                .WithMany(t => t.Matches)
-                .HasForeignKey(m => m.HomeTeamId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
+            .WithMany(t => t.HomeMatches)
+            .HasForeignKey(m => m.HomeTeamId)
+            .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(m => m.AwayTeam)
-                .WithMany(t => t.Matches)
-                .HasForeignKey(m => m.AwayTeamId)
-                .OnDelete(DeleteBehavior.Restrict);
+           .WithMany(t => t.AwayMatches)
+           .HasForeignKey(m => m.AwayTeamId)
+           .OnDelete(DeleteBehavior.Restrict);
 
             //builder.HasOne(m => m.Tournament)
             //    .WithMany(t => t.Matches)
             //    .HasForeignKey(m => m.TournamentId)
             //    .OnDelete(DeleteBehavior.Cascade);
-           
+
             builder.HasMany(m => m.PlayerStats)
                 .WithOne(pms => pms.Match)
                 .HasForeignKey(pms => pms.MatchId)

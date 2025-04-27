@@ -10,9 +10,9 @@ namespace TournamentManagementSystem.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TournamentDbContext).Assembly);
 
-
+            SeedData.Seed(modelBuilder);
         }
 
 
