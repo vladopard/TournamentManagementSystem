@@ -7,12 +7,12 @@ namespace TournamentManagementSystem.BusinessServices.BusinessInterfaces
     {
         Task<IEnumerable<TournamentDTO>> GetAllTournamentsAsync();
         Task<TournamentDTO?> GetSingleTournamentAsync(int id);
-        Task<TournamentDTO?> CreateTournamentAsync(
+        Task<TournamentDTO> CreateTournamentAsync(
             TournamentCreateDTO tournamentCreateDTO);
-        Task<bool> UpdateTournamentAsync(
+        Task UpdateTournamentAsync(
             TournamentUpdateDTO tournamentUpdateDTO, int id);
-        Task<bool> PatchTournamentAsync(
+        Task PatchTournamentAsync(
             TournamentPatchDTO patchedDTO, int id);
-        Task<bool> DeleteTournamentAsync(int id);
+        Task DeleteTournamentAsync(int id);
     }
 }

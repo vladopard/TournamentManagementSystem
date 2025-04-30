@@ -13,6 +13,8 @@ namespace TournamentManagementSystem.EntityConfig
             builder.Property(o => o.Name).IsRequired().HasMaxLength(100);
             builder.Property(o => o.ContactInfo).IsRequired().HasMaxLength(200);
 
+            builder.HasIndex(o => new { o.Name, o.ContactInfo }).IsUnique();
+
             builder.HasMany(o => o.Tournaments)
                 .WithOne(t => t.Organizer)
                 .HasForeignKey(t => t.OrganizerId)

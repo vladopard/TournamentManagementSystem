@@ -15,6 +15,8 @@ namespace TournamentManagementSystem.EntityConfig
             builder.Property(m => m.ScoreHome).IsRequired();
             builder.Property(m => m.ScoreAway).IsRequired();
 
+            builder.HasIndex(m => new { m.StartDate, m.EndDate, m.HomeTeamId,m.AwayTeamId }).IsUnique();
+
             builder.HasOne(m => m.HomeTeam)
             .WithMany(t => t.HomeMatches)
             .HasForeignKey(m => m.HomeTeamId)

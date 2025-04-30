@@ -13,6 +13,9 @@ namespace TournamentManagementSystem.EntityConfig
             builder.Property(t => t.Name).IsRequired().HasMaxLength(100);
             builder.Property(t => t.Coach).IsRequired().HasMaxLength(100);
 
+            builder.HasIndex(t => new { t.Name,t.TournamentId }).IsUnique();
+
+
             builder.HasOne(t => t.Tournament)
                 .WithMany(tr => tr.Teams)
                 .HasForeignKey(t => t.TournamentId)
@@ -21,7 +24,7 @@ namespace TournamentManagementSystem.EntityConfig
             builder.HasMany(t => t.Players)
                    .WithOne(p => p.Team)
                    .HasForeignKey(p => p.TeamId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.Ignore(t => t.Matches);
         }

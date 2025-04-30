@@ -16,6 +16,11 @@ namespace TournamentManagementSystem.EntityConfig
             builder.Property(t => t.SportType).IsRequired().HasMaxLength(50);
             builder.Property(t => t.StartDate).IsRequired();
             builder.Property(t => t.EndDate).IsRequired();
+
+            builder.HasIndex(t => new { t.StartDate, t.EndDate, t.Name, t.Location, t.SportType })
+                .IsUnique();
+
+
             // 3) Organizer relationship (many Tournaments → one Organizer)
             //builder.HasOne(t => t.Organizer)
             //    .WithMany(o => o.Tournaments)
