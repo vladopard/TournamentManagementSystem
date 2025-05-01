@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using TournamentManagementSystem.DTOs.Organizer;
-using TournamentManagementSystem.DTOs.Tournament;
 using TournamentManagementSystem.Entities;
 
 namespace TournamentManagementSystem.Profiles

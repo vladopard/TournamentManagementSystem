@@ -170,5 +170,47 @@ namespace TournamentManagementSystem.Repositories
                 .AnyAsync(o => o.ContactInfo == contactInfo && 
                 (!excludedOrganizerId.HasValue || o.OrganizerId != excludedOrganizerId));
         }
+
+        //TEAM TEAM TEAM TEAM TEAM TEAM TEAM TEAM
+        //TEAM TEAM TEAM TEAM TEAM TEAM TEAM TEAM
+        //TEAM TEAM TEAM TEAM TEAM TEAM TEAM TEAM
+        //TEAM TEAM TEAM TEAM TEAM TEAM TEAM TEAM
+
+        public async Task<IEnumerable<Team>> GetAllTeamsAsync()
+        {
+            return await _context.Teams
+                .AsNoTracking()
+                .Include(t => t.Tournament)
+                .Include(t => t.Players)
+                .ToListAsync();
+        }
+
+        public async Task<Team?> GetTeamAsync(int id)
+        {
+            return await _context.Teams
+                .AsNoTracking()
+                .Include(t => t.Tournament)
+                .Include(t => t.Players)
+                .FirstOrDefaultAsync(t => t.TeamId == id);
+        }
+
+        public async Task AddTeamAsync(Team team)
+        {
+            await _context.Teams.AddAsync(team);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTeamAsync(Team team)
+        {
+            _context.Teams.Update(team);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateTeamAsync(Team team)
+        {
+            _context.Teams.Remove(team);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

@@ -23,10 +23,9 @@ namespace TournamentManagementSystem.BusinessServices
             return _mapper.Map<IEnumerable<OrganizerDTO>>(organizers);
         }
 
-        public async Task<OrganizerDTO?> GetOrganizerAsync(int id)
+        public async Task<OrganizerDTO> GetOrganizerAsync(int id)
         {
-            var organizer = await _repo.GetOrganizerAsync(id);
-            if (organizer == null) return null;
+            var organizer = await GetOrganizerOrThrow(id);
             return _mapper.Map<OrganizerDTO>(organizer);
         }
         public async Task<OrganizerDTO> CreateOrganizerAsync(OrganizerCreateDTO organizerCreateDTO)
@@ -38,9 +37,7 @@ namespace TournamentManagementSystem.BusinessServices
 
             // 4) Return DTO (ID is set)
             return _mapper.Map<OrganizerDTO>(organizerEntity);
-        }
-
-        
+        }       
 
         public async Task UpdateOrganizerAsync(OrganizerUpdateDTO organizerUpdateDTO, int id)
         {
@@ -76,7 +73,10 @@ namespace TournamentManagementSystem.BusinessServices
             await _repo.DeleteOrganizerAsync(organizer);
         }
 
-        //SUMNJIVE METODE KOJE RESAVAJU DRY
+        //HELPERI
+        //HELPERI
+        //HELPERI
+
         private async Task<Organizer> GetOrganizerOrThrow(int id)
         {
             return await _repo.GetOrganizerAsync(id)

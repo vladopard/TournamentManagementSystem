@@ -22,5 +22,11 @@ namespace TournamentManagementSystem.Repositories
         Task<bool> OrganizerExistsAsync(int organizerId);
         Task<bool> OrganizerContactInfoExistsAsync(string contactInfo, int? excludedOrganizerId = null);
         Task<bool> OrganizerNameExistsAsync(string name, int? excludedOrganizerId = null);
+        //TEAM METHODS
+        Task<IEnumerable<Team>> GetAllTeamsAsync();
+        Task<Team?> GetTeamAsync(int id);
+        Task AddTeamAsync(Team team);
+        Task DeleteTeamAsync(Team team);
+        Task UpdateTeamAsync(Team team);
     }
 }

@@ -31,41 +31,27 @@ namespace TournamentManagementSystem.Controllers
         public async Task<ActionResult<OrganizerDTO>> GetOrganizer(int id)
         {
             var organizer = await _service.GetOrganizerAsync(id);
-            return organizer != null ? Ok(organizer) : NotFound();
+            return Ok(organizer);
         }
 
         [HttpPost]
         public async Task<ActionResult<OrganizerDTO>> CreateOrganizer(
             OrganizerCreateDTO organizerCreateDTO)
         {
-            try { 
                 var organizerDTO = await _service.CreateOrganizerAsync(organizerCreateDTO);
-
                 return CreatedAtRoute("GetSingleOrganizer",
                 new { id = organizerDTO.OrganizerId },
                 organizerDTO);
-            } catch(InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }    
+             
         }
 
         [HttpPut("{id}")] // Use HttpPut for full updates
         public async Task<IActionResult> UpdateOrganizer(int id, OrganizerUpdateDTO organizerUpdateDTO)
         {
-            try
-            {
-                await _service.UpdateOrganizerAsync(organizerUpdateDTO, id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"Organizer {id} not found.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
+
+            await _service.UpdateOrganizerAsync(organizerUpdateDTO, id);
+            return NoContent();
+            
         }
 
         [HttpPatch("{id}")]
@@ -83,37 +69,18 @@ namespace TournamentManagementSystem.Controllers
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
             if (!TryValidateModel(organizerForPatchDTO)) return UnprocessableEntity(ModelState);
 
-            try
-            {
-                await _service.PatchOrganizerAsync(organizerForPatchDTO, id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
+            await _service.PatchOrganizerAsync(organizerForPatchDTO, id);
+            return NoContent();
+
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteOrganizer(int id)
         {
-            try
-            {
-                await _service.DeleteOrganizerAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();       
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            await _service.DeleteOrganizerAsync(id);
+            return NoContent();
+
         }
 
     }

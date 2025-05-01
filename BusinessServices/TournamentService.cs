@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using TournamentManagementSystem.BusinessServices.BusinessInterfaces;
 using TournamentManagementSystem.DTOs;
-using TournamentManagementSystem.DTOs.Tournament;
 using TournamentManagementSystem.Entities;
 using TournamentManagementSystem.Repositories;
 
@@ -26,10 +25,9 @@ namespace TournamentManagementSystem.BusinessServices
             return tournamentDTOs;
         }
 
-        public async Task<TournamentDTO?> GetSingleTournamentAsync(int id)
+        public async Task<TournamentDTO> GetSingleTournamentAsync(int id)
         {
-            var tournament = await _repo.GetTournamentAsync(id);
-            if (tournament == null) return null;
+            var tournament =await GetTournamentOrThrowAsync(id);
             return _mapper.Map<TournamentDTO>(tournament);
         } 
 
@@ -108,6 +106,7 @@ namespace TournamentManagementSystem.BusinessServices
             }
         }
 
+        //da se ne zeznes ovo je tu zbog FK-a nije greska
         private async Task EnsureOrganizerExistsOrThrowAsync(int organizerId)
         {
             //ako organizer ne postoji baci exception

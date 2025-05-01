@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using TournamentManagementSystem.DTOs.Tournament;
+using TournamentManagementSystem.DTOs;
+
 
 namespace TournamentManagementSystem.Validation.TournamentValidation
 {
