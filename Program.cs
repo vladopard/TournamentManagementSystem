@@ -18,6 +18,7 @@ builder.Services.AddScoped<ISystemRepository, SystemRepository>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IOrganizerService, OrganizerService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 builder.Services.AddControllers(configure =>
 {

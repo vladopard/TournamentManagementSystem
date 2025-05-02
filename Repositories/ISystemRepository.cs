@@ -32,6 +32,15 @@ namespace TournamentManagementSystem.Repositories
         Task<bool> TeamExistsAsync(string name, int tournamentId, int? excludeId = null);
         Task<bool> TeamHasPlayersAsync(int teamId);
         Task<bool> TeamHasMatchesAsync(int teamId);
+        //PLAYERS
+        Task<IEnumerable<Player>> GetAllPlayersAsync();
+        Task<Player?> GetPlayerAsync(int id);
+        Task AddPlayerAsync(Player player);
+        Task UpdatePlayerAsync(Player player);
+        Task DeletePlayerAsync(Player player);
+        Task<bool> PlayerExistsAsync(string firstName, string lastName,
+            DateTime dob, int? excludeId = null);
+        Task<bool> TeamFkExistsAsync(int teamId);
 
     }
 }

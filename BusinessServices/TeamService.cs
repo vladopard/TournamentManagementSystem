@@ -60,6 +60,9 @@ namespace TournamentManagementSystem.BusinessServices
                 await EnsureTournamentFKExistsOrThrowAsync(patchedDTO.TournamentId.Value);
 
             _mapper.Map(patchedDTO, teamEntity);
+
+            await EnsureUniqueTeamAsync(teamEntity.Name, teamEntity.TournamentId, id);
+
             await _repo.UpdateTeamAsync(teamEntity);
         }
 

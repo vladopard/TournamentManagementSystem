@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Xml.Linq;
+using Microsoft.EntityFrameworkCore;
 using TournamentManagementSystem.DbContexts;
 using TournamentManagementSystem.Entities;
 
@@ -88,13 +89,17 @@ namespace TournamentManagementSystem.Repositories
         public async Task<bool> TournamentExistsAsync(DateTime start,DateTime end,string name,
             string location,string sportType,int? excludedTournamentId = null)
         {
+            var nameUpper = name.Trim().ToUpper();
+            var locationUpper = location.Trim().ToUpper();
+            var sportUpper = sportType.Trim().ToUpper();
+
             return await _context.Tournaments
                 .AnyAsync(t =>
                     t.StartDate == start &&
                     t.EndDate == end &&
-                    t.Name == name &&
-                    t.Location == location &&
-                    t.SportType == sportType &&
+                    t.Name.ToUpper() == nameUpper &&
+                    t.Location.ToUpper() == locationUpper &&
+                    t.SportType.ToUpper() == sportUpper &&
                     // when updating, ignore the record being updated
                     (!excludedTournamentId.HasValue || t.TournamentId != excludedTournamentId.Value)
                 );
@@ -162,15 +167,19 @@ namespace TournamentManagementSystem.Repositories
         }
         public async Task<bool> OrganizerNameExistsAsync(string name, int? excludedOrganizerId = null)
         {
+            var nameUpper = name.Trim().ToUpper();
+
             return await _context.Organizers
-                .AnyAsync(o => o.Name == name && 
+                .AnyAsync(o => o.Name.ToUpper() == nameUpper && 
                 (!excludedOrganizerId.HasValue || o.OrganizerId != excludedOrganizerId));
         }
 
         public async Task<bool> OrganizerContactInfoExistsAsync(string contactInfo, int? excludedOrganizerId = null)
         {
+            var contactUpper = contactInfo.Trim().ToUpper();
+
             return await _context.Organizers
-                .AnyAsync(o => o.ContactInfo == contactInfo && 
+                .AnyAsync(o => o.ContactInfo.ToUpper() == contactUpper && 
                 (!excludedOrganizerId.HasValue || o.OrganizerId != excludedOrganizerId));
         }
 
@@ -219,9 +228,11 @@ namespace TournamentManagementSystem.Repositories
 
         public async Task<bool> TeamExistsAsync(string name, int tournamentId, int? excludeId = null)
         {
+            string nameUpper = name.Trim().ToUpper();
+
             return await _context.Teams
                 .AnyAsync(t =>
-                t.Name == name &&
+                t.Name.ToUpper() == nameUpper &&
                 t.TournamentId == tournamentId &&
                 (!excludeId.HasValue || t.TeamId != excludeId.Value));
         }
@@ -238,5 +249,52 @@ namespace TournamentManagementSystem.Repositories
         //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
         //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
 
+        public async Task<IEnumerable<Player>> GetAllPlayersAsync()
+                      => await _context.Players
+                        .AsNoTracking()
+                        .Include(p => p.Team)
+                        .ToListAsync();
+
+        public async Task<Player?> GetPlayerAsync(int id)
+                      => await _context.Players
+                        .Include(p => p.Team)
+                        .FirstOrDefaultAsync(p => p.PlayerId == id);
+
+        public async Task AddPlayerAsync(Player player)
+        {
+            await _context.Players.AddAsync(player);
+            await _context.SaveChangesAsync();
+            await _context.Entry(player)
+                .Reference(p => p.Team)
+                .LoadAsync();
+        }
+
+        public async Task UpdatePlayerAsync(Player player)
+        {
+            _context.Players.Update(player);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeletePlayerAsync(Player player)
+        {
+            _context.Players.Remove(player);
+            await _context.SaveChangesAsync();
+        }
+        //HELPERI HELPERI
+        public async Task<bool> PlayerExistsAsync(string firstName, string lastName,
+            DateTime dob, int? excludeId = null)
+        {
+            var firstUpper = firstName.Trim().ToUpper();
+            var lastUpper = lastName.Trim().ToUpper();
+
+            return await _context.Players.AnyAsync(p =>
+                p.FirstName.ToUpper() == firstUpper &&
+                p.LastName.ToUpper() == lastUpper &&
+                p.DateOfBirth == dob &&
+                (!excludeId.HasValue || p.PlayerId != excludeId.Value));
+        } 
+
+        public async Task<bool> TeamFkExistsAsync(int teamId)
+            => await _context.Teams.AnyAsync(t => t.TeamId == teamId);
     }
 }
