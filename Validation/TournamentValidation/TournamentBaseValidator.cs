@@ -4,6 +4,8 @@ using TournamentManagementSystem.DTOs;
 
 namespace TournamentManagementSystem.Validation.TournamentValidation
 {
+    //You only ever need FluentValidation for your incoming models (Create/Update/Patch DTOs),
+    //not for your output DTOs. 
     public abstract class TournamentBaseValidator<T> : AbstractValidator<T> 
         where T : TournamentBaseDTO
     {
@@ -32,4 +34,21 @@ namespace TournamentManagementSystem.Validation.TournamentValidation
                 .GreaterThan(0).WithMessage("Organizer id must be a valid positive number");
         }
     }
+
+    public class TournamentCreateValidator : TournamentBaseValidator<TournamentCreateDTO>
+    {
+        public TournamentCreateValidator() : base()
+        {
+
+        }
+
+    }
+    public class TournamentUpdateValidator : TournamentBaseValidator<TournamentUpdateDTO>
+    {
+        public TournamentUpdateValidator() : base()
+        {
+
+        }
+    }
+
 }

@@ -18,4 +18,17 @@ namespace TournamentManagementSystem.Validation.OrganizerValidation
 
     }
 
+    public class OrganizerCreateValidator : OrganizerBaseValidator<OrganizerCreateDTO>
+    {
+        public OrganizerCreateValidator() : base()
+        {
+
+        }
+    }
+
+    public class OrganizerUpdateValidator : OrganizerBaseValidator<OrganizerUpdateDTO>
+    {
+        public OrganizerUpdateValidator() : base() { }
+    }
+
 }

@@ -88,8 +88,6 @@ namespace TournamentManagementSystem.BusinessServices
         {
             var errors = new List<string>();
 
-
-
             if (newName != currentName
                 && await _repo.OrganizerNameExistsAsync(newName, excludedId))
             {

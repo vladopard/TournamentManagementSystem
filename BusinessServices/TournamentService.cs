@@ -51,12 +51,12 @@ namespace TournamentManagementSystem.BusinessServices
         {
             var currentTournament = await GetTournamentOrThrowAsync(id);
 
+            if (tournamentUpdateDTO.OrganizerId != currentTournament.OrganizerId)
+                await EnsureOrganizerExistsOrThrowAsync(tournamentUpdateDTO.OrganizerId);
+
             await EnsureUniqueAsync(tournamentUpdateDTO.StartDate, tournamentUpdateDTO.EndDate,
                 tournamentUpdateDTO.Name, tournamentUpdateDTO.Location, tournamentUpdateDTO.SportType, 
                 id);
-
-            if (tournamentUpdateDTO.OrganizerId != currentTournament.OrganizerId)
-                await EnsureOrganizerExistsOrThrowAsync(tournamentUpdateDTO.OrganizerId);
 
             _mapper.Map(tournamentUpdateDTO, currentTournament);
             await _repo.UpdateTournamentAsync(currentTournament);
@@ -67,15 +67,16 @@ namespace TournamentManagementSystem.BusinessServices
         {
             var tournamentEntity = await GetTournamentOrThrowAsync(id);
 
-            var originalOrganizerId = tournamentEntity.OrganizerId;
+            //fk check
+            if(patchedDTO.OrganizerId.HasValue &&
+                patchedDTO.OrganizerId.Value != tournamentEntity.OrganizerId)
+                await EnsureOrganizerExistsOrThrowAsync(patchedDTO.OrganizerId!.Value);
+
             _mapper.Map(patchedDTO, tournamentEntity);
             //mapujemo odma zato sto nullable propertiji od patcheddto-a smetaju posle
 
             await EnsureUniqueAsync(tournamentEntity.StartDate, tournamentEntity.EndDate,
                 tournamentEntity.Name, tournamentEntity.Location, tournamentEntity.SportType, id);
-
-            if (patchedDTO.OrganizerId!.Value != originalOrganizerId)
-                await EnsureOrganizerExistsOrThrowAsync(patchedDTO.OrganizerId!.Value);
 
             await _repo.UpdateTournamentAsync(tournamentEntity);
 

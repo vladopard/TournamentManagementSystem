@@ -41,7 +41,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     new UnprocessableEntityObjectResult(context.ModelState);
 });
 
-
+//FLUENT VALIDATION
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

@@ -23,7 +23,6 @@ namespace TournamentManagementSystem.Repositories
 
         public async Task<Tournament?> GetTournamentAsync(int id)
             =>   await _context.Tournaments
-                .AsNoTracking()
                 .Include(t => t.Organizer)
                 .Include(t => t.Teams)
                 .FirstOrDefaultAsync(t => t.TournamentId == id);
@@ -101,6 +100,11 @@ namespace TournamentManagementSystem.Repositories
                 );
         }
 
+        public async Task<bool> TournamentFKExistsAsync(int tournamentId)
+        {
+            return await _context.Tournaments
+                .AnyAsync(t => t.TournamentId == tournamentId);
+        }
 
         public async Task<bool> SaveChangesAsync()
         {
@@ -122,7 +126,6 @@ namespace TournamentManagementSystem.Repositories
         public async Task<Organizer?> GetOrganizerAsync(int id)
         {
             return await _context.Organizers
-                .AsNoTracking()
                 .Include(o => o.Tournaments)
                 .FirstOrDefaultAsync(o => o.OrganizerId == id);
         }
@@ -188,7 +191,6 @@ namespace TournamentManagementSystem.Repositories
         public async Task<Team?> GetTeamAsync(int id)
         {
             return await _context.Teams
-                .AsNoTracking()
                 .Include(t => t.Tournament)
                 .Include(t => t.Players)
                 .FirstOrDefaultAsync(t => t.TeamId == id);
@@ -198,19 +200,43 @@ namespace TournamentManagementSystem.Repositories
         {
             await _context.Teams.AddAsync(team);
             await _context.SaveChangesAsync();
+            await _context.Entry(team)
+                .Reference(t => t.Tournament)
+                .LoadAsync();
         }
 
         public async Task DeleteTeamAsync(Team team)
         {
-            _context.Teams.Update(team);
+            _context.Teams.Remove(team);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateTeamAsync(Team team)
         {
-            _context.Teams.Remove(team);
+            _context.Teams.Update(team);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> TeamExistsAsync(string name, int tournamentId, int? excludeId = null)
+        {
+            return await _context.Teams
+                .AnyAsync(t =>
+                t.Name == name &&
+                t.TournamentId == tournamentId &&
+                (!excludeId.HasValue || t.TeamId != excludeId.Value));
+        }
+
+        //fordeletion
+        public async Task<bool> TeamHasPlayersAsync(int teamId)
+            => await _context.Players.AnyAsync(p => p.TeamId == teamId);
+
+        public async Task<bool> TeamHasMatchesAsync(int teamId)
+            => await _context.Matches.AnyAsync(m => m.HomeTeamId == teamId 
+                                                || m.AwayTeamId == teamId);
+        //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
+        //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
+        //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
+        //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
 
     }
 }

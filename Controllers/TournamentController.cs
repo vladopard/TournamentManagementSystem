@@ -60,10 +60,8 @@ namespace TournamentManagementSystem.Controllers
         public async Task<ActionResult> PatchTournament(
             JsonPatchDocument<TournamentPatchDTO> patchDocument, int id)
         {
-            if (patchDocument == null) return BadRequest();
-
+            //if (patchDocument == null) return BadRequest();
             var tournamentDTO = await _service.GetSingleTournamentAsync(id);
-            if (tournamentDTO == null) return NotFound($"Tournament {id} not found.");
 
             var tournamentForPatchDTO = _mapper.Map<TournamentPatchDTO>(tournamentDTO);
             patchDocument.ApplyTo(tournamentForPatchDTO, ModelState);
@@ -78,10 +76,8 @@ namespace TournamentManagementSystem.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTournament(int id)
         {
-
             await _service.DeleteTournamentAsync(id);
             return NoContent();
-
         }
     }
 }

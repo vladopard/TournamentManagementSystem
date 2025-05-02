@@ -15,7 +15,6 @@ namespace TournamentManagementSystem.EntityConfig
 
             builder.HasIndex(t => new { t.Name,t.TournamentId }).IsUnique();
 
-
             builder.HasOne(t => t.Tournament)
                 .WithMany(tr => tr.Teams)
                 .HasForeignKey(t => t.TournamentId)

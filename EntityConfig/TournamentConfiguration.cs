@@ -20,7 +20,6 @@ namespace TournamentManagementSystem.EntityConfig
             builder.HasIndex(t => new { t.StartDate, t.EndDate, t.Name, t.Location, t.SportType })
                 .IsUnique();
 
-
             // 3) Organizer relationship (many Tournaments → one Organizer)
             //builder.HasOne(t => t.Organizer)
             //    .WithMany(o => o.Tournaments)

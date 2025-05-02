@@ -28,6 +28,56 @@ namespace TournamentManagementSystem.BusinessServices
             return _mapper.Map<TeamDTO>(teamEntity);
         }
 
+        public async Task<TeamDTO> AddTeamAsync(TeamCreateDTO teamCreateDTO)
+        {
+            await EnsureTournamentFKExistsOrThrowAsync(teamCreateDTO.TournamentId);
+
+            await EnsureUniqueTeamAsync(teamCreateDTO.Name, teamCreateDTO.TournamentId);
+
+            var teamEntity = _mapper.Map<Team>(teamCreateDTO);
+            await _repo.AddTeamAsync(teamEntity);
+            return _mapper.Map<TeamDTO>(teamEntity);
+        }
+        public async Task UpdateTeamAsync(TeamUpdateDTO teamUpdateDTO, int id)
+        {
+            var teamEntity = await GetTeamOrThrowAsync(id);
+
+            if(teamUpdateDTO.TournamentId !=  teamEntity.TournamentId)
+                await EnsureTournamentFKExistsOrThrowAsync(teamUpdateDTO.TournamentId);
+
+            await EnsureUniqueTeamAsync(teamUpdateDTO.Name, teamUpdateDTO.TournamentId, id);
+
+            _mapper.Map(teamUpdateDTO, teamEntity);
+            await _repo.UpdateTeamAsync(teamEntity);
+        }
+
+        public async Task PatchTeamAsync(TeamPatchDTO patchedDTO, int id)
+        {
+            var teamEntity = await GetTeamOrThrowAsync(id);
+
+            if (patchedDTO.TournamentId.HasValue &&
+                patchedDTO.TournamentId.Value != teamEntity.TournamentId)
+                await EnsureTournamentFKExistsOrThrowAsync(patchedDTO.TournamentId.Value);
+
+            _mapper.Map(patchedDTO, teamEntity);
+            await _repo.UpdateTeamAsync(teamEntity);
+        }
+
+        public async Task DeleteTeamAsync(int id)
+        {
+            var team = await GetTeamOrThrowAsync(id);
+
+            if(await _repo.TeamHasPlayersAsync(id))
+                throw new InvalidOperationException(
+                "Cannot delete team while players are still assigned.");
+
+            if (await _repo.TeamHasMatchesAsync(id))
+                throw new InvalidOperationException(
+                    "Cannot delete team while matches still reference it.");
+
+            await _repo.DeleteTeamAsync(team);
+        }
+
         //////HELPERI
         //////HELPERI
         //////HELPERI
@@ -37,6 +87,21 @@ namespace TournamentManagementSystem.BusinessServices
             return await _repo.GetTeamAsync(id)
                 ?? throw new KeyNotFoundException($"Team with id: {id} not found");   
         }
+
+        private async Task EnsureUniqueTeamAsync(string name, int tournamentId, int? excludeId = null)
+        {
+            if (await _repo.TeamExistsAsync(name, tournamentId, excludeId))
+                throw new InvalidOperationException
+                    ($"A team named '{name}' already exists in tournament {tournamentId}");
+        }
+
+        private async Task EnsureTournamentFKExistsOrThrowAsync(int tournamentId)
+        {
+            if (!await _repo.TournamentFKExistsAsync(tournamentId))
+                throw new KeyNotFoundException($"Tournament with the id {tournamentId} doesn't exist");
+        }
+
+
 
     }
 }

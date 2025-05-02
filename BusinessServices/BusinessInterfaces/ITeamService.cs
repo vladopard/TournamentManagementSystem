@@ -7,5 +7,9 @@ namespace TournamentManagementSystem.BusinessServices
     {
         Task<IEnumerable<TeamDTO>> GetAllTeamsAsync();
         Task<TeamDTO> GetTeamAsync(int id);
+        Task<TeamDTO> AddTeamAsync(TeamCreateDTO teamCreateDTO);
+        Task UpdateTeamAsync(TeamUpdateDTO teamUpdateDTO, int id);
+        Task PatchTeamAsync(TeamPatchDTO patchedDTO, int id);
+        Task DeleteTeamAsync(int id);
     }
 }
