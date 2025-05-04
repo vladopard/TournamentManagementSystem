@@ -296,5 +296,68 @@ namespace TournamentManagementSystem.Repositories
 
         public async Task<bool> TeamFkExistsAsync(int teamId)
             => await _context.Teams.AnyAsync(t => t.TeamId == teamId);
+
+        //MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH
+        //MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH
+        //MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH
+        //MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH
+
+        public async Task<IEnumerable<Match>> GetAllMatchesAsync()
+            => await _context.Matches
+                .AsNoTracking()
+                .Include(m => m.HomeTeam)
+                .Include(m => m.AwayTeam)
+                .Include(m => m.Tournament)
+                .ToListAsync();
+        public async Task<Match?> GetMatchAsync(int id)
+            => await _context.Matches
+                .Include(m => m.HomeTeam)
+                .Include(m => m.AwayTeam)
+                .Include(m => m.Tournament)
+                .FirstOrDefaultAsync(m => m.MatchId == id);
+        public async Task AddMatchAsync(Match match)
+        {
+            await _context.AddAsync(match);
+            await _context.SaveChangesAsync();
+            await _context.Entry(match)
+                .Reference(t => t.HomeTeam)
+                .LoadAsync();
+            await _context.Entry(match)
+                .Reference(t => t.AwayTeam)
+                .LoadAsync();
+        }
+        public async Task UpdateMatchAsync(Match match)
+        {
+            _context.Update(match);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteMatchAsync(Match match)
+        {
+            _context.Matches.Remove(match);
+            await _context.SaveChangesAsync();
+        }
+        //HELPERI DRUGA DVA VEC POSTOJE za tournament i teamfk
+        public async Task<bool> MatchExistsAsync(DateTime start, DateTime end,
+            int homeTeamId, int awayTeamId, int? excludeId = null)
+        {
+            return await _context.Matches.AnyAsync(m =>
+                m.StartDate == start &&
+                m.EndDate == end &&
+                m.HomeTeamId == homeTeamId &&
+                m.AwayTeamId == awayTeamId &&
+                (!excludeId.HasValue || excludeId != m.MatchId));
+        }
+
+        public async Task<bool> IsTeamBusyAsync(int teamId, 
+            DateTime start, DateTime end, int? excludeMatchId)
+        {
+
+            return await _context.Matches.AnyAsync(m =>
+                (m.HomeTeamId == teamId || m.AwayTeamId == teamId) &&
+                start < m.EndDate && end > m.StartDate &&
+                (!excludeMatchId.HasValue || m.MatchId != excludeMatchId.Value)
+            );
+        }
+
     }
 }

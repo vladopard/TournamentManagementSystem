@@ -18,7 +18,6 @@ namespace TournamentManagementSystem.Profiles
             CreateMap<MatchUpdateDTO, Match>();
             CreateMap<MatchDTO, MatchPatchDTO>();
             CreateMap<MatchPatchDTO, Match>();
-
             
         }
     }

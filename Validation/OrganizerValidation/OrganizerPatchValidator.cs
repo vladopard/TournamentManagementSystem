@@ -7,13 +7,19 @@ namespace TournamentManagementSystem.Validation.OrganizerValidation
     {
         public OrganizerPatchValidator() 
         {
-            RuleFor(x => x.Name)
-               .MaximumLength(100)
-               .When(x => x.Name != null);
+            When(x => x.Name != null, () =>
+            {
+                RuleFor(x => x.Name!)
+                    .NotEmpty().WithMessage("Name cannot be empty")
+                    .MaximumLength(100).WithMessage("Name must be at most 100 characters");
+            });
 
-            RuleFor(x => x.ContactInfo)
-                .MaximumLength(100)
-                .When(x => x.ContactInfo != null);
+            When(x => x.ContactInfo != null, () =>
+            {
+                RuleFor(x => x.ContactInfo!)
+                    .NotEmpty().WithMessage("Contact info cannot be empty")
+                    .MaximumLength(200).WithMessage("Contact info must be at most 200 characters");
+            });
         }
     }
 }

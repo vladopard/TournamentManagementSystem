@@ -7,18 +7,26 @@ namespace TournamentManagementSystem.Validation.TeamValidation
     {
         public TeamPatchValidator()
         {
-            RuleFor(x => x.Name)
-               .MaximumLength(100)
-               .When(x => x.Name != null);
+            When(x => x.Name != null, () =>
+            {
+                RuleFor(x => x.Name!)
+                    .NotEmpty().WithMessage("Name cannot be empty")
+                    .MaximumLength(100).WithMessage("Name must be at most 100 characters");
+            });
 
-            RuleFor(x => x.Coach)
-                .MaximumLength(100)
-                .When(x => x.Coach != null);
+            When(x => x.Coach != null, () =>
+            {
+                RuleFor(x => x.Coach!)
+                    .NotEmpty().WithMessage("Coach cannot be empty")
+                    .MaximumLength(100).WithMessage("Coach must be at most 100 characters");
+            });
 
-            RuleFor(x => x.TournamentId)
-                .GreaterThan(0)
-                .When(x => x.TournamentId.HasValue)
-                .WithMessage("Tournament id must be a valid positive number");
+            When(x => x.TournamentId.HasValue, () =>
+            {
+                RuleFor(x => x.TournamentId!.Value)
+                    .GreaterThan(0)
+                    .WithMessage("Tournament id must be a valid positive number");
+            });
         }
     }
 }
