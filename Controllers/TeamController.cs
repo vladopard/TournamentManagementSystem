@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +11,8 @@ namespace TournamentManagementSystem.Controllers
 {
     [Route("api/teams")]
     [ApiController]
+    [Authorize(Policy = "RequireAdmin")]
+
     public class TeamController : ControllerBase
     {
         private readonly ITeamService _service;

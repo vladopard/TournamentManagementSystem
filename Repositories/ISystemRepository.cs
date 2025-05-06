@@ -12,6 +12,7 @@ namespace TournamentManagementSystem.Repositories
         Task<bool> TournamentExistsAsync(DateTime start,DateTime end,string name,
             string location,string sportType,int? excludedTournamentId = null);
         Task<bool> TournamentFKExistsAsync(int tournamentId);
+        Task<bool> TournamentHasPlayersAsync(int tournamentId);
         Task<bool> SaveChangesAsync();
         //ORGANIZER METHODS
         Task<IEnumerable<Organizer>> GetAllOrganizersAsync();
@@ -50,6 +51,10 @@ namespace TournamentManagementSystem.Repositories
         Task<bool> MatchExistsAsync(DateTime start, DateTime end,
             int homeTeamId, int awayTeamId, int? excludeId = null);
         Task<bool> IsTeamBusyAsync(int teamId, DateTime start, DateTime end, int? excludeMatchId = null);
+
+        //PLAYERMATCHSTATS
+        Task<IEnumerable<PlayerMatchStats>> GetAllStatsForPlayerAsync(int playerId);
+        Task<PlayerMatchStats?> GetStatsForPlayerFromOneMatchAsync(int playerId, int matchId);
 
     }
 }

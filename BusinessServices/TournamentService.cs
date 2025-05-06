@@ -86,7 +86,9 @@ namespace TournamentManagementSystem.BusinessServices
         {
             var tournament = await GetTournamentOrThrowAsync(id);
 
-            // 2) (Optional) business rule, e.g. prevent deleting if teams/matches exist:
+            if (await _repo.TournamentHasPlayersAsync(id))
+                throw new InvalidOperationException(
+                   "Cannot delete tournament: players are still assigned to its teams.");
 
             await _repo.DeleteTournamentAsync(tournament);
         }

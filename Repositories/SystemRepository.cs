@@ -48,42 +48,7 @@ namespace TournamentManagementSystem.Repositories
         }
         public async Task DeleteTournamentAsync(Tournament tournament)
         {
-            var teamIds = await _context.Teams
-                                .Where(t => t.TournamentId == tournament.TournamentId)
-                                .Select(t => t.TeamId)
-                                .ToListAsync();
-
-            // Get IDs of Matches associated with the tournament
-            var matchIds = await _context.Matches
-                                         .Where(m => m.TournamentId == tournament.TournamentId)
-                                         .Select(m => m.MatchId)
-                                         .ToListAsync();
-
-            // 2. Mark dependent entities for deletion in the correct order (reverse of dependency)
-
-            
-            // Delete PlayerMatchStats associated with the tournament's matches
-            var relatedStats = _context.Results.Where(pms => matchIds.Contains(pms.MatchId));
-            _context.Results.RemoveRange(relatedStats);
-
-            // Delete Matches associated with the tournament
-            // (Need to do this before Teams because Match -> Team is Restrict)
-            var relatedMatches = _context.Matches.Where(m => m.TournamentId == tournament.TournamentId);
-            _context.Matches.RemoveRange(relatedMatches);
-
-            // Delete Players associated with the tournament's teams
-            // (Need to do this before Teams because Team -> Player is Restrict)
-            var relatedPlayers = _context.Players.Where(p => teamIds.Contains(p.TeamId)); // Assuming Player has TeamId FK
-            _context.Players.RemoveRange(relatedPlayers);
-
-            // Delete Teams associated with the tournament
-            var relatedTeams = _context.Teams.Where(t => t.TournamentId == tournament.TournamentId);
-            _context.Teams.RemoveRange(relatedTeams);
-
-            // 3. Mark the Tournament itself for deletion
-            _context.Tournaments.Remove(tournament); // Use the original or the loaded 'tournamentToDelete'
-
-            // 4. Save all changes in a single transaction
+            _context.Tournaments.Remove(tournament);
             await _context.SaveChangesAsync();
         }
         public async Task<bool> TournamentExistsAsync(DateTime start,DateTime end,string name,
@@ -111,6 +76,9 @@ namespace TournamentManagementSystem.Repositories
                 .AnyAsync(t => t.TournamentId == tournamentId);
         }
 
+        public async Task<bool> TournamentHasPlayersAsync(int tournamentId) =>
+            await _context.Players
+            .AnyAsync(p => p.Team.TournamentId == tournamentId);
         public async Task<bool> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync() >= 0;
@@ -357,6 +325,44 @@ namespace TournamentManagementSystem.Repositories
                 start < m.EndDate && end > m.StartDate &&
                 (!excludeMatchId.HasValue || m.MatchId != excludeMatchId.Value)
             );
+        }
+
+        //PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS
+        //PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS
+        //PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS
+        //PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS PLAYERMATCHSTATS
+
+        //public async Task GetStatsByMatch(int id)
+        //{
+        //    return await _context.Results.
+        //}
+
+
+        public async Task<IEnumerable<PlayerMatchStats>> GetAllStatsForPlayerAsync(int playerId)
+        {
+            return await _context.Results
+                .AsNoTracking()
+                .Include(pms => pms.Match)
+                    .ThenInclude(m => m.HomeTeam)
+                .Include(pms => pms.Match)
+                    .ThenInclude(m => m.AwayTeam)
+                .Include(pms => pms.Player)
+                .Where(pms => pms.PlayerId == playerId)
+                .ToListAsync();
+        }
+
+        public async Task<PlayerMatchStats?> 
+            GetStatsForPlayerFromOneMatchAsync(int playerId, int matchId)
+        {
+            return await _context.Results
+                .Include(pms => pms.Player)
+                .Include(pms => pms.Match)
+                    .ThenInclude(m => m.HomeTeam)
+                .Include(pms => pms.Match)
+                    .ThenInclude(m => m.AwayTeam)
+                .FirstOrDefaultAsync(pms =>
+                pms.PlayerId == playerId &&
+                pms.MatchId == matchId);
         }
 
     }
