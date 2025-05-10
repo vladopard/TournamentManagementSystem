@@ -1,4 +1,6 @@
-﻿using TournamentManagementSystem.Entities;
+﻿using TournamentManagementSystem.DTOs.Parameters;
+using TournamentManagementSystem.Entities;
+using TournamentManagementSystem.Helpers;
 
 namespace TournamentManagementSystem.Repositories
 {
@@ -34,6 +36,7 @@ namespace TournamentManagementSystem.Repositories
         Task<bool> TeamHasPlayersAsync(int teamId);
         Task<bool> TeamHasMatchesAsync(int teamId);
         //PLAYERS
+        Task<PagedList<Player>> GetAllPlayersPagedAsync(PlayerParameters parameters);
         Task<IEnumerable<Player>> GetAllPlayersAsync();
         Task<Player?> GetPlayerAsync(int id);
         Task AddPlayerAsync(Player player);
@@ -43,6 +46,7 @@ namespace TournamentManagementSystem.Repositories
             DateTime dob, int? excludeId = null);
         Task<bool> TeamFkExistsAsync(int teamId);
         //MATCH
+        Task<PagedList<Match>> GetAllMatchesPagedAsync(MatchParameters p);
         Task<IEnumerable<Match>> GetAllMatchesAsync();
         Task<Match?> GetMatchAsync(int id);
         Task AddMatchAsync(Match match);

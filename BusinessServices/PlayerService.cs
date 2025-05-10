@@ -1,8 +1,10 @@
 ﻿using System.Xml.Linq;
 using AutoMapper;
 using TournamentManagementSystem.BusinessServices.BusinessInterfaces;
+using TournamentManagementSystem.DTOs.Parameters;
 using TournamentManagementSystem.DTOs.Player;
 using TournamentManagementSystem.Entities;
+using TournamentManagementSystem.Helpers;
 using TournamentManagementSystem.Repositories;
 
 namespace TournamentManagementSystem.BusinessServices
@@ -16,6 +18,17 @@ namespace TournamentManagementSystem.BusinessServices
         {
             _repo = repo;
             _mapper = mapper;
+        }
+        public async Task<PagedList<PlayerDTO>> GetAllPlayersPagedAsync(PlayerParameters playerParameters)
+        {
+            //pagedlist<player> : list<player>
+            var pagedEntities = await _repo.GetAllPlayersPagedAsync(playerParameters);
+            var pagedDTOs = _mapper.Map<List<PlayerDTO>>(pagedEntities);
+            return new PagedList<PlayerDTO>(
+                pagedDTOs,
+                pagedEntities.MetaData.TotalCount,
+                pagedEntities.MetaData.CurrentPage,
+                pagedEntities.MetaData.PageSize);
         }
 
         public async Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync()

@@ -3,7 +3,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TournamentManagementSystem.BusinessServices.BusinessInterfaces;
 using TournamentManagementSystem.DTOs.Match;
+using TournamentManagementSystem.DTOs.Parameters;
+using TournamentManagementSystem.DTOs.Player;
 using TournamentManagementSystem.Entities;
+using TournamentManagementSystem.Helpers;
 using TournamentManagementSystem.Repositories;
 
 namespace TournamentManagementSystem.BusinessServices
@@ -18,7 +21,16 @@ namespace TournamentManagementSystem.BusinessServices
             _repo = repo;
             _mapper = mapper;
         }
-
+        public async Task<PagedList<MatchDTO>> GetAllMatchesPagedAsync(MatchParameters matchParameters)
+        {
+            var pagedEntities = await _repo.GetAllMatchesPagedAsync(matchParameters);
+            var pagedDTOs = _mapper.Map<List<MatchDTO>>(pagedEntities);
+            return new PagedList<MatchDTO>(
+                pagedDTOs,
+                pagedEntities.MetaData.TotalCount,
+                pagedEntities.MetaData.CurrentPage,
+                pagedEntities.MetaData.PageSize);
+        }
         public async Task<IEnumerable<MatchDTO>> GetMatchesAsync()
         {
             var matches = await _repo.GetAllMatchesAsync();

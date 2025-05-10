@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TournamentManagementSystem.BusinessServices.BusinessInterfaces;
+using TournamentManagementSystem.DTOs.Parameters;
 using TournamentManagementSystem.DTOs.Player;
+using TournamentManagementSystem.Helpers;
 
 namespace TournamentManagementSystem.Controllers
 {
@@ -19,9 +22,20 @@ namespace TournamentManagementSystem.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers()
-            => Ok(await _service.GetAllPlayersAsync());
+        public async Task<ActionResult<PagedList<PlayerDTO>>> GetAllPlayers(
+            [FromQuery] PlayerParameters playerParameters)
+        {
+            var pagedPlayers = await _service.GetAllPlayersPagedAsync(playerParameters);
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(pagedPlayers.MetaData));
+            return Ok(pagedPlayers);
+        }
+
+        //pre paginacije
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers()
+        //    => Ok(await _service.GetAllPlayersAsync());
 
         [HttpGet("{id}", Name = "GetPlayer")]
         public async Task<ActionResult<PlayerDTO>> GetPlayer(int id)

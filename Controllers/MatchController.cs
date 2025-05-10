@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using TournamentManagementSystem.BusinessServices.BusinessInterfaces;
 using TournamentManagementSystem.DTOs.Match;
+using TournamentManagementSystem.DTOs.Parameters;
+using TournamentManagementSystem.Helpers;
 
 namespace TournamentManagementSystem.Controllers
 {
@@ -21,10 +24,19 @@ namespace TournamentManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MatchDTO>>> GetMatches()
+        public async Task<ActionResult<PagedList<MatchDTO>>> GetAllMatches(
+            [FromQuery] MatchParameters matchParameters)
         {
-            return Ok(await _service.GetMatchesAsync());
+            var pagedMatches = await _service.GetAllMatchesPagedAsync(matchParameters);
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(pagedMatches.MetaData));
+            return Ok(pagedMatches);
         }
+
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<MatchDTO>>> GetMatches()
+        //{
+        //    return Ok(await _service.GetMatchesAsync());
+        //}
 
         [HttpGet("{id}", Name = "GetMatch")]
         public async Task<ActionResult<MatchDTO>> GetMatch(int id)

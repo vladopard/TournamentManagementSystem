@@ -1,7 +1,9 @@
 ﻿using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 using TournamentManagementSystem.DbContexts;
+using TournamentManagementSystem.DTOs.Parameters;
 using TournamentManagementSystem.Entities;
+using TournamentManagementSystem.Helpers;
 
 namespace TournamentManagementSystem.Repositories
 {
@@ -216,6 +218,48 @@ namespace TournamentManagementSystem.Repositories
         //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
         //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
         //PLAYERS PLAYERS PLAYERS PLAYERS //PLAYERS
+        public async Task<PagedList<Player>> GetAllPlayersPagedAsync(PlayerParameters parameters)
+        {
+            var query = _context.Players
+                .AsNoTracking()
+                .Include(p => p.Team)
+                .AsQueryable();
+
+            if (parameters.TeamId.HasValue)
+                query = query.Where(p => p.TeamId == parameters.TeamId.Value);
+
+            if (!string.IsNullOrWhiteSpace(parameters.SearchTerm))
+            {
+                var term = parameters.SearchTerm.Trim().ToLower();
+                query = query.Where(p =>
+                    p.FirstName.ToLower().Contains(term) ||
+                    p.LastName.ToLower().Contains(term));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.SortBy))
+            {
+                try
+                {
+                    query = query.ApplyOrdering(
+                                parameters.SortBy,
+                                nameof(Player.FirstName),
+                                nameof(Player.LastName),
+                                nameof(Player.DateOfBirth),
+                                nameof(Player.Position));
+                }
+                catch
+                {
+                    query = query.OrderBy(p => p.FirstName);
+                }
+            }
+
+            return await PagedList<Player>.CreateAsync(
+                query,
+                parameters.PageNumber,
+                parameters.PageSize); 
+
+            
+        }
 
         public async Task<IEnumerable<Player>> GetAllPlayersAsync()
                       => await _context.Players
@@ -270,6 +314,59 @@ namespace TournamentManagementSystem.Repositories
         //MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH
         //MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH MATCH
 
+        public async Task<PagedList<Match>> GetAllMatchesPagedAsync(MatchParameters p)
+        {
+            var query = _context.Matches
+            .AsNoTracking()
+            .Include(m => m.HomeTeam)
+            .Include(m => m.AwayTeam)
+            .Include(m => m.Tournament)
+            .AsQueryable();
+
+            if (p.HomeTeamId.HasValue)
+                query = query.Where(m => m.HomeTeamId == p.HomeTeamId.Value);
+
+            if (p.AwayTeamId.HasValue)
+                query = query.Where(m => m.AwayTeamId == p.AwayTeamId.Value);
+
+            if (p.TournamentId.HasValue)
+                query = query.Where(m => m.TournamentId == p.TournamentId.Value);
+
+            if (!string.IsNullOrWhiteSpace(p.SearchTerm))
+            {
+                var searchTrimmed = p.SearchTerm.Trim().ToLower();
+                query = query.Where(m => m.HomeTeam.Name.ToLower().Contains(searchTrimmed) ||
+                    m.AwayTeam.Name.ToLower().Contains(searchTrimmed));
+            }
+
+            if(!string.IsNullOrWhiteSpace(p.SortBy))
+
+                if (!string.IsNullOrWhiteSpace(p.SortBy))
+                {
+                    try
+                    {
+                        query = query.ApplyOrdering(
+                            p.SortBy,
+                            nameof(Match.MatchId),
+                            nameof(Match.StartDate),
+                            nameof(Match.EndDate),
+                            nameof(Match.HomeTeamId),
+                            nameof(Match.AwayTeamId),
+                            nameof(Match.TournamentId)
+                            );
+                    }
+                    catch
+                    {
+                        query = query.OrderBy(p => p.TournamentId);
+                    }
+                }
+
+            return await PagedList<Match>.CreateAsync(
+                query,
+                p.PageNumber,
+                p.PageSize);
+
+        }
         public async Task<IEnumerable<Match>> GetAllMatchesAsync()
             => await _context.Matches
                 .AsNoTracking()
@@ -364,6 +461,8 @@ namespace TournamentManagementSystem.Repositories
                 pms.PlayerId == playerId &&
                 pms.MatchId == matchId);
         }
+
+
 
     }
 }
