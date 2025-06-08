@@ -40,7 +40,7 @@ namespace TournamentManagementSystem.EntityConfig
             {
                 table.HasCheckConstraint(
                     name: "CK_Tournament_Dates",
-                    sql: "[StartDate] < [EndDate]");
+                    sql: "\"StartDate\" < \"EndDate\"");
             });
         }
     }

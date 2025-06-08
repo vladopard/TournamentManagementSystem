@@ -60,7 +60,7 @@ namespace TournamentManagementSystem.Migrations
 
                     b.ToTable("Matches", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Match_Dates", "[StartDate] < [EndDate]");
+                            t.HasCheckConstraint("CK_Match_Dates", "\"StartDate\" < \"EndDate\"");
                         });
 
                     b.HasData(
@@ -68,22 +68,22 @@ namespace TournamentManagementSystem.Migrations
                         {
                             MatchId = 1,
                             AwayTeamId = 2,
-                            EndDate = new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndDate = new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             HomeTeamId = 1,
                             ScoreAway = 74,
                             ScoreHome = 78,
-                            StartDate = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             TournamentId = 1
                         },
                         new
                         {
                             MatchId = 2,
                             AwayTeamId = 4,
-                            EndDate = new DateTime(2025, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndDate = new DateTime(2025, 12, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             HomeTeamId = 3,
                             ScoreAway = 92,
                             ScoreHome = 88,
-                            StartDate = new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             TournamentId = 2
                         });
                 });
@@ -166,7 +166,7 @@ namespace TournamentManagementSystem.Migrations
                         new
                         {
                             PlayerId = 1,
-                            DateOfBirth = new DateTime(1995, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1995, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "John",
                             LastName = "Doe",
                             Position = "Guard",
@@ -175,7 +175,7 @@ namespace TournamentManagementSystem.Migrations
                         new
                         {
                             PlayerId = 2,
-                            DateOfBirth = new DateTime(1992, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1992, 8, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Mike",
                             LastName = "Smith",
                             Position = "Forward",
@@ -184,7 +184,7 @@ namespace TournamentManagementSystem.Migrations
                         new
                         {
                             PlayerId = 3,
-                            DateOfBirth = new DateTime(1990, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1990, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Tom",
                             LastName = "Brown",
                             Position = "Center",
@@ -193,7 +193,7 @@ namespace TournamentManagementSystem.Migrations
                         new
                         {
                             PlayerId = 4,
-                            DateOfBirth = new DateTime(1994, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1994, 7, 25, 0, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "James",
                             LastName = "White",
                             Position = "Guard",
@@ -202,7 +202,7 @@ namespace TournamentManagementSystem.Migrations
                         new
                         {
                             PlayerId = 5,
-                            DateOfBirth = new DateTime(1991, 5, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1991, 5, 11, 0, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Chris",
                             LastName = "Green",
                             Position = "Forward",
@@ -211,7 +211,7 @@ namespace TournamentManagementSystem.Migrations
                         new
                         {
                             PlayerId = 6,
-                            DateOfBirth = new DateTime(1993, 9, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = new DateTime(1993, 9, 17, 0, 0, 0, 0, DateTimeKind.Utc),
                             FirstName = "Steve",
                             LastName = "Blue",
                             Position = "Center",
@@ -391,29 +391,29 @@ namespace TournamentManagementSystem.Migrations
 
                     b.ToTable("Tournaments", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Tournament_Dates", "[StartDate] < [EndDate]");
+                            t.HasCheckConstraint("CK_Tournament_Dates", "\"StartDate\" < \"EndDate\"");
                         });
 
                     b.HasData(
                         new
                         {
                             TournamentId = 1,
-                            EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndDate = new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Location = "New York",
                             Name = "Champions Cup",
                             OrganizerId = 1,
                             SportType = "Basketball",
-                            StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             TournamentId = 2,
-                            EndDate = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EndDate = new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             Location = "Chicago",
                             Name = "Winter League",
                             OrganizerId = 2,
                             SportType = "Basketball",
-                            StartDate = new DateTime(2025, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            StartDate = new DateTime(2025, 12, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 

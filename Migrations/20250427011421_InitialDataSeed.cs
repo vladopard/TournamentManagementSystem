@@ -181,8 +181,8 @@ namespace TournamentManagementSystem.Migrations
                 columns: new[] { "TournamentId", "EndDate", "Location", "Name", "OrganizerId", "SportType", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "New York", "Champions Cup", 1, "Basketball", new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chicago", "Winter League", 2, "Basketball", new DateTime(2025, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, new DateTime(2025, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc), "New York", "Champions Cup", 1, "Basketball", new DateTime(2025, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
+                    { 2, new DateTime(2026, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc), "Chicago", "Winter League", 2, "Basketball", new DateTime(2025, 12, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.InsertData(
@@ -201,8 +201,8 @@ namespace TournamentManagementSystem.Migrations
                 columns: new[] { "MatchId", "AwayTeamId", "EndDate", "HomeTeamId", "ScoreAway", "ScoreHome", "StartDate", "TeamId", "TournamentId" },
                 values: new object[,]
                 {
-                    { 1, 2, new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 74, 78, new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 1 },
-                    { 2, 4, new DateTime(2025, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, 92, 88, new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 2 }
+                    { 1, 2, new DateTime(2025, 6, 5, 0, 0, 0, 0, DateTimeKind.Utc), 1, 74, 78, new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Utc), null, 1 },
+                    { 2, 4, new DateTime(2025, 12, 10, 0, 0, 0, 0, DateTimeKind.Utc), 3, 92, 88, new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Utc), null, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -210,12 +210,12 @@ namespace TournamentManagementSystem.Migrations
                 columns: new[] { "PlayerId", "DateOfBirth", "FirstName", "LastName", "Position", "TeamId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(1995, 4, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "John", "Doe", "Guard", 1 },
-                    { 2, new DateTime(1992, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "Mike", "Smith", "Forward", 1 },
-                    { 3, new DateTime(1990, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), "Tom", "Brown", "Center", 2 },
-                    { 4, new DateTime(1994, 7, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), "James", "White", "Guard", 2 },
-                    { 5, new DateTime(1991, 5, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Chris", "Green", "Forward", 3 },
-                    { 6, new DateTime(1993, 9, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), "Steve", "Blue", "Center", 4 }
+                    { 1, new DateTime(1995, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc), "John", "Doe", "Guard", 1 },
+                    { 2, new DateTime(1992, 8, 15, 0, 0, 0, 0, DateTimeKind.Utc), "Mike", "Smith", "Forward", 1 },
+                    { 3, new DateTime(1990, 3, 20, 0, 0, 0, 0, DateTimeKind.Utc), "Tom", "Brown", "Center", 2 },
+                    { 4, new DateTime(1994, 7, 25, 0, 0, 0, 0, DateTimeKind.Utc), "James", "White", "Guard", 2 },
+                    { 5, new DateTime(1991, 5, 11, 0, 0, 0, 0, DateTimeKind.Utc), "Chris", "Green", "Forward", 3 },
+                    { 6, new DateTime(1993, 9, 17, 0, 0, 0, 0, DateTimeKind.Utc), "Steve", "Blue", "Center", 4 }
                 });
 
             migrationBuilder.InsertData(

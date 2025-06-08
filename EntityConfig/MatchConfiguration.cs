@@ -41,7 +41,7 @@ namespace TournamentManagementSystem.EntityConfig
             {
                 table.HasCheckConstraint(
                     "CK_Match_Dates",
-                    "[StartDate] < [EndDate]");
+                    "\"StartDate\" < \"EndDate\"");
             });
 
         }
