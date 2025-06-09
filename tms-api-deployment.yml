@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tms-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tms-api
+  template:
+    metadata:
+      labels:
+        app: tms-api
+    spec:
+      containers:
+      - name: tms-api
+        image: saars1/tms-api:1.0
+        ports:
+        - containerPort: 80
+        resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

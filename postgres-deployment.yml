@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+#Sets the name of the deployment
+metadata: 
+  name: postgres
+#config for deployment
+spec:
+  replicas: 1
+  #upravljaj podovima koji imaju label postgres
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    #daje label podovima koje napravi - postgres
+    metadata:
+      labels:
+        app: postgres
+    #config for pods
+    #Направи под који покреће PostgreSQL image, подеси му иницијалну базу, user и password, 
+    #отвори порт 5432 и пази да не троши више од пола CPU-а и 512Mi RAM-а.“
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_DB
+              value: tmsdb
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: password
+          ports: 
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
