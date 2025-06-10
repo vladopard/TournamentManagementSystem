@@ -12,3 +12,7 @@ spec:
     nodePort: 30080
 
 #minikube service tms-api
+
+#Save this as a ~/.kube/config file inside the action runner
+#Use it to authenticate to your local Minikube cluster (assuming the runner can reach it 
+#— which only works if you’re self-hosting the runner or tunneling)
