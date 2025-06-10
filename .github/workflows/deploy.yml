@@ -16,9 +16,9 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker image 
-        run: docker build -t saarsl/tms-api:latest .
+        run: docker build -t saars1/tms-api:latest .
 
       - name: Push Docker image
-        run: docker push saarsl/tms-api:latest
+        run: docker push saars1/tms-api:latest
 #Када се image пушује, локално у minikube:
 #kubectl rollout restart deployment tms-api
