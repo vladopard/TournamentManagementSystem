@@ -1,11 +1,11 @@
-name: Build and Deploy to Kubernetes
+name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,15 +16,9 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: docker build -t saars1/tms-api:latest .
+        run: docker build -t saarsl/tms-api:latest .
 
       - name: Push Docker image
-        run: docker push saars1/tms-api:latest
-      
-      - name: Set up Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-      
-      - name: Restart deployment in Kubernetes
-        run: kubectl rollout restart deployment tms-api
+        run: docker push saarsl/tms-api:latest
+#Када се image пушује, локално у minikube:
+#kubectl rollout restart deployment tms-api
